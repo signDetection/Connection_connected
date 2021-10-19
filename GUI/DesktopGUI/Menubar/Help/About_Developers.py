@@ -7,13 +7,13 @@ about_dev_window = None
 class About_dv:
 
     def __init__(self, about_dv_window):
-        about_dv_window.title('Information about Developers of conversation connected')
+        about_dv_window.title('About Developers of conversation connected')
         about_dv_window.resizable(False, False)
         about_dv_window.configure(background="AliceBlue")
 
         self.style = ttk.Style()
         self.style.configure('TFrame', background="AliceBlue")
-        self.style.configure('TLabel', background="AliceBlue", font=('Times New Roman', 11))
+        self.style.configure('TLabel', background="AliceBlue", font=('Times New Roman', 12))
         self.style.configure('h1.TLabel', font=('Times New Roman', 20, 'bold'))
         self.style.configure('h2.TLabel', font=('Times New Roman', 16, 'bold'))
 
@@ -23,7 +23,7 @@ class About_dv:
         ttk.Label(self.frame, text="Conversation Connected !!!", style='h1.TLabel', justify="center").grid(
             row=0, column=0)
 
-        ttk.Label(self.frame, text='Developers :', style='h2.TLabel').grid(row=5, column=0, padx=5, pady=35)
+        ttk.Label(self.frame, text='Developers :', style='h2.TLabel').grid(row=5, column=0, padx=5, pady=(35,10))
         ttk.Label(self.frame, text='Jugal Patel', style='TLabel').grid(row=8, column=0, padx=5)
         ttk.Label(self.frame, text='Jay Parekh', style='TLabel').grid(row=9, column=0, padx=5)
         ttk.Label(self.frame, text='Dhruv Chauhan', style='TLabel').grid(row=10, column=0, padx=5)
@@ -38,7 +38,7 @@ class About_dv:
 def about_dv():
     global about_dev_window
     about_dev_window = Tk()
-    about_dev_window.geometry("500x350")
+    about_dev_window.geometry("450x320")
     About_dv(about_dev_window)
     about_dev_window.mainloop()
 

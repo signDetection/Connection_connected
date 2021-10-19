@@ -3,13 +3,9 @@ from tkinter import ttk
 from tkinter import messagebox
 
 
-
-
 class Feedback:
 
     def __init__(self, feedback_window):
-        super().__init__()
-        feedback_window.update()
         feedback_window.title('Feedback To conversation connected')
         feedback_window.resizable(False, False)
         feedback_window.configure(background="AliceBlue")
@@ -22,7 +18,6 @@ class Feedback:
 
         self.frame_header = ttk.Frame(feedback_window, style='TFrame')  # header frame
         self.frame_header.pack()
-        feedback_window.update()
 
         ttk.Label(self.frame_header, text="Thank you for your valuable feedback !!! ", style='header.TLabel').grid(
             row=0, column=1)
@@ -52,7 +47,6 @@ class Feedback:
         ttk.Button(self.frame_content, text='Close', command=feedback_window.destroy).grid(row=4, column=4, padx=5,
                                                                                            pady=10,
                                                                                            sticky='e')
-        feedback_window.update()
 
     def submit(self):
         print('Name: {}'.format(self.entry_name.get()))
@@ -72,7 +66,6 @@ class Feedback:
 def feedback():
     global feedback_window
     feedback_window = Tk()
-    feedback_window.update()
     Feedback(feedback_window)
     feedback_window.mainloop()
 

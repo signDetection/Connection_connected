@@ -11,7 +11,7 @@ class Project:
 
         # windowSize,title,icon & background of the window
 
-        window.geometry("1500x700")
+        window.geometry("1500x730")
         window.title("Conversation Connected")
         self.logo = PhotoImage(file='image/LogoOfProject.png')
         window.iconphoto(True, self.logo)
@@ -52,6 +52,7 @@ class Project:
         # content
 
         # canvas
+
         global main_frame
         main_frame = Frame(window, bg="AliceBlue")
         main_frame.pack(fill=BOTH, expand=1)
@@ -74,7 +75,7 @@ class Project:
 
         Button(self.button_frame,
                text=" WallPaper ",
-               font=("Times New Roman", 30, "italic"),
+               font=("Times New Roman", 25, "italic"),
                bg="AliceBlue",
                command=self.wallpaper,
                borderwidth=5,
@@ -82,7 +83,7 @@ class Project:
                ).pack(side=BOTTOM, padx=20, pady=40)
         Button(self.button_frame,
                text=" Face Expression Recognizer ",
-               font=("Times New Roman", 30, "italic"),
+               font=("Times New Roman", 25, "italic"),
                bg="AliceBlue",
                command=None,
                borderwidth=5,
@@ -90,7 +91,7 @@ class Project:
                ).pack(side=BOTTOM, padx=20, pady=40)
         Button(self.button_frame,
                text=" Face Mask Detection ",
-               font=("Times New Roman", 30, "italic"),
+               font=("Times New Roman", 25, "italic"),
                bg="AliceBlue",
                command=None,
                borderwidth=5,
@@ -98,7 +99,7 @@ class Project:
                ).pack(side=BOTTOM, padx=20, pady=40)
         Button(self.button_frame,
                text=" Sign Language Detection ",
-               font=("Times New Roman", 30, "italic"),
+               font=("Times New Roman", 25, "italic"),
                bg="AliceBlue",
                command=None,
                borderwidth=5,
@@ -114,6 +115,7 @@ class Project:
                               anchor="nw",
                               fg="#0d0d0d",
                               bg="white",
+                              width=1500,
                               font=("Times New Roman", 35, "bold"),
                               aspect=200)
         output_area.pack(side=BOTTOM, fill=X, expand=1, padx=10, pady=(10, 40))
@@ -125,17 +127,18 @@ class Project:
             filetypes=(("PNG", "*.png"),
                        ("All IMG Files", '*.jpeg,*.jpg,*.jpe,*.png'),
                        ("JPEG", "*.jpeg,*.jpe,*.jpg")))
-        self.file = open(self.filepath, 'r')
-        print(self.file.read())
-        self.file.close()
+        open_image = PhotoImage(file="image/LogoOfProject.png")
+        main_canvas.delete("all")
+        main_canvas.itemconfig(item_in_canvas, image=open_image)
 
     def mail_author(self):
         import webbrowser
         self.mail = webbrowser.open('mailto:jugalrpatel1704@gmail.com', new=1)
 
     def wallpaper(self):
+        main_canvas.delete("all")
         bg_img1 = PhotoImage(file="image/LogoOfProject.png")
-        self.change = main_canvas.itemconfig(item_in_canvas, image=bg_img1)
+        main_canvas.itemconfig(item_in_canvas, image=bg_img1)
         print("this is work")
 
 

@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import filedialog
-from Menubar.Help.Feedback import feedback
-from Menubar.Help.About_Developers import about_dv
-from Menubar.Help.How_To_Use import how_to_use
+from GUI.Menubar.Help.Feedback import feedback
+from GUI.Menubar.Help.About_Developers import about_dv
+from GUI.Menubar.Help.How_To_Use import how_to_use
 
 
 class Project:
@@ -13,7 +13,7 @@ class Project:
 
         window.geometry("1500x730")
         window.title("Conversation Connected")
-        self.logo = PhotoImage(file='image/LogoOfProject.png')
+        self.logo = PhotoImage(file='GUI/image/LogoOfProject.png')
         window.iconphoto(True, self.logo)
         window.config(background="AliceBlue")
         # window.state('zoomed')
@@ -64,7 +64,7 @@ class Project:
         main_canvas = Canvas(second_frame, bg="AliceBlue")
         main_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         global bg_img
-        bg_img = PhotoImage(file="image/LogoOfProject.png")
+        bg_img = PhotoImage(file="GUI/image/LogoOfProject.png")
         global item_in_canvas
         item_in_canvas = main_canvas.create_image(100, 100, anchor=NW, image=bg_img)
 
@@ -127,7 +127,7 @@ class Project:
             filetypes=(("PNG", "*.png"),
                        ("All IMG Files", '*.jpeg,*.jpg,*.jpe,*.png'),
                        ("JPEG", "*.jpeg,*.jpe,*.jpg")))
-        open_image = PhotoImage(file="image/LogoOfProject.png")
+        open_image = PhotoImage(file="GUI/image/LogoOfProject.png")
         main_canvas.delete("all")
         main_canvas.itemconfig(item_in_canvas, image=open_image)
 
@@ -137,7 +137,7 @@ class Project:
 
     def wallpaper(self):
         main_canvas.delete("all")
-        bg_img1 = PhotoImage(file="image/LogoOfProject.png")
+        bg_img1 = PhotoImage(file="GUI/image/LogoOfProject.png")
         main_canvas.itemconfig(item_in_canvas, image=bg_img1)
         print("this is work")
 

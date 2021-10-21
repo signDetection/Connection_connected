@@ -6,6 +6,7 @@ from GUI.Menubar.Help.How_To_Use import how_to_use
 
 
 class Project:
+
     def __init__(self, window):
         self.window = window
 
@@ -63,10 +64,9 @@ class Project:
         global main_canvas
         main_canvas = Canvas(second_frame, bg="AliceBlue")
         main_canvas.pack(side=LEFT, fill=BOTH, expand=1)
-        global bg_img
-        bg_img = PhotoImage(file="GUI/image/LogoOfProject.png")
-        global item_in_canvas
-        item_in_canvas = main_canvas.create_image(100, 100, anchor=NW, image=bg_img)
+        global bg_image
+        bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
+        main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
 
         # Frame for Buttons
 
@@ -121,15 +121,16 @@ class Project:
         output_area.pack(side=BOTTOM, fill=X, expand=1, padx=10, pady=(10, 40))
 
     def open_file(self):
-        self.filepath = filedialog.askopenfilename(
-            initialdir="C:\\Users\\Public\\Downloads",
+        self.file_path = None
+        self.file_path = filedialog.askopenfilename(
             title="Open IMG file",
             filetypes=(("PNG", "*.png"),
                        ("All IMG Files", '*.jpeg,*.jpg,*.jpe,*.png'),
                        ("JPEG", "*.jpeg,*.jpe,*.jpg")))
-        open_image = PhotoImage(file="GUI/image/LogoOfProject.png")
         main_canvas.delete("all")
-        main_canvas.itemconfig(item_in_canvas, image=open_image)
+        self.open_image = PhotoImage(file=self.file_path)
+        main_canvas.create_image(0, 0, anchor=NW, image=self.open_image)
+        output_var.set("you opened an Image")
 
     def mail_author(self):
         import webbrowser
@@ -137,9 +138,10 @@ class Project:
 
     def wallpaper(self):
         main_canvas.delete("all")
-        bg_img1 = PhotoImage(file="GUI/image/LogoOfProject.png")
-        main_canvas.itemconfig(item_in_canvas, image=bg_img1)
-        print("this is work")
+        global bg_image
+        bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
+        main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
+        output_var.set("You are viewing wallpaper")
 
 
 def starting_project():

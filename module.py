@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import filedialog
+from tkinter import colorchooser
+from PIL import Image, ImageTk
 from GUI.Menubar.Help.Feedback import feedback
 from GUI.Menubar.Help.About_Developers import about_dv
 from GUI.Menubar.Help.How_To_Use import how_to_use
@@ -17,7 +19,7 @@ class Project:
         self.logo = PhotoImage(file='GUI/image/LogoOfProject.png')
         window.iconphoto(True, self.logo)
         window.config(background="AliceBlue")
-        # window.state('zoomed')
+        window.state('zoomed')
 
         # Top menu of the window
 
@@ -29,7 +31,11 @@ class Project:
         self.file_menu.add_command(label="Open", command=self.open_file)
         self.file_menu.add_command(label="Print Result")
         self.file_menu.add_command(label="History")
-        self.file_menu.add_command(label="Settings...")
+        self.settings_submenu = Menu(self.file_menu, tearoff=0)
+        self.settings_submenu.add_command(label="change colour",
+                                          command=lambda: main_frame.config(bg=colorchooser.askcolor()[1]))
+        self.file_menu.add_cascade(label="settings", menu=self.settings_submenu)
+
         self.file_menu.add_separator()
         self.file_menu.add_command(label="Exit", command=quit)
 
@@ -121,14 +127,16 @@ class Project:
         output_area.pack(side=BOTTOM, fill=X, expand=1, padx=10, pady=(10, 40))
 
     def open_file(self):
-        self.file_path = None
         self.file_path = filedialog.askopenfilename(
             title="Open IMG file",
             filetypes=(("PNG", "*.png"),
                        ("All IMG Files", '*.jpeg,*.jpg,*.jpe,*.png'),
                        ("JPEG", "*.jpeg,*.jpe,*.jpg")))
+        self.opened_image = Image.open(self.file_path)
+        self.resized_image = self.opened_image.resize((600, 600), Image.ANTIALIAS)
+
         main_canvas.delete("all")
-        self.open_image = PhotoImage(file=self.file_path)
+        self.open_image = ImageTk.PhotoImage(self.resized_image)
         main_canvas.create_image(0, 0, anchor=NW, image=self.open_image)
         output_var.set("you opened an Image")
 

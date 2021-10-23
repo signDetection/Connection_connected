@@ -26,12 +26,12 @@ class Project:
         self.menubar = Menu(window)
         window.config(menu=self.menubar)
 
-        self.file_menu = Menu(self.menubar, tearoff=0)
+        self.file_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="File", menu=self.file_menu)
         self.file_menu.add_command(label="Open", command=self.open_file)
         self.file_menu.add_command(label="Print Result")
         self.file_menu.add_command(label="History")
-        self.settings_submenu = Menu(self.file_menu, tearoff=0)
+        self.settings_submenu = Menu(self.file_menu, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.settings_submenu.add_command(label="change colour",
                                           command=lambda: main_frame.config(bg=colorchooser.askcolor()[1]))
         self.file_menu.add_cascade(label="settings", menu=self.settings_submenu)
@@ -39,14 +39,14 @@ class Project:
         self.file_menu.add_separator()
         self.file_menu.add_command(label="Exit", command=quit)
 
-        self.edit_menu = Menu(self.menubar, tearoff=0)
+        self.edit_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="Tools", menu=self.edit_menu)
         self.edit_menu.add_command(label="Sign Language Detection")
         self.edit_menu.add_separator()
         self.edit_menu.add_command(label="Facial Expression Recognizer")
         self.edit_menu.add_command(label="Face Mask Detection")
 
-        self.help_menu = Menu(self.menubar, tearoff=0)
+        self.help_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="Help", menu=self.help_menu)
         self.help_menu.add_command(label="How to use", command=how_to_use)
         self.help_menu.add_separator()
@@ -68,7 +68,7 @@ class Project:
         second_frame = Frame(main_frame, bg="AliceBlue")
         second_frame.pack(side=TOP, fill=BOTH)
         global main_canvas
-        main_canvas = Canvas(second_frame, bg="AliceBlue")
+        main_canvas = Canvas(second_frame, bg="AliceBlue", width=1400, height=900)
         main_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         global bg_image
         bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
@@ -82,15 +82,35 @@ class Project:
         Button(self.button_frame,
                text=" WallPaper ",
                font=("Times New Roman", 25, "italic"),
-               bg="AliceBlue",
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
                command=self.wallpaper,
+               borderwidth=5,
+               state=ACTIVE,
+               ).pack(side=BOTTOM, padx=20, pady=40)
+        Button(self.button_frame,
+               text=" capture ",
+               font=("Times New Roman", 25, "italic"),
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
+               command=None,
+               borderwidth=5,
+               state=ACTIVE,
+               ).pack(side=BOTTOM, padx=20, pady=40)
+        Button(self.button_frame,
+               text=" Camera ",
+               font=("Times New Roman", 25, "italic"),
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
+               command=None,
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
         Button(self.button_frame,
                text=" Face Expression Recognizer ",
                font=("Times New Roman", 25, "italic"),
-               bg="AliceBlue",
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
                command=None,
                borderwidth=5,
                state=ACTIVE,
@@ -98,7 +118,8 @@ class Project:
         Button(self.button_frame,
                text=" Face Mask Detection ",
                font=("Times New Roman", 25, "italic"),
-               bg="AliceBlue",
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
                command=None,
                borderwidth=5,
                state=ACTIVE,
@@ -106,7 +127,8 @@ class Project:
         Button(self.button_frame,
                text=" Sign Language Detection ",
                font=("Times New Roman", 25, "italic"),
-               bg="AliceBlue",
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
                command=None,
                borderwidth=5,
                state=ACTIVE,
@@ -119,26 +141,31 @@ class Project:
         output_area = Message(main_frame, textvariable=output_var,
                               relief=SUNKEN,
                               anchor="nw",
-                              fg="#0d0d0d",
-                              bg="white",
+                              fg="DarkSlateGray",
+                              bg="WhiteSmoke",
                               width=1500,
                               font=("Times New Roman", 35, "bold"),
                               aspect=200)
-        output_area.pack(side=BOTTOM, fill=X, expand=1, padx=10, pady=(10, 40))
+        output_area.pack(side=BOTTOM, fill=X, padx=10, pady=(10, 40))
 
     def open_file(self):
         self.file_path = filedialog.askopenfilename(
             title="Open IMG file",
-            filetypes=(("PNG", "*.png"),
-                       ("All IMG Files", '*.jpeg,*.jpg,*.jpe,*.png'),
-                       ("JPEG", "*.jpeg,*.jpe,*.jpg")))
+            filetypes=(("All Image Files", "*.png;*.bmp;*.dib;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.ico;*.webp"),
+                       ("PNG", "*.png"),
+                       ("Bitmap Files", "*.bmp;*.dib"),
+                       ("JPEG", "*.jpg;*.jpeg;*.jpe;*.jfif"),
+                       ("GIF", "*.gif"),
+                       ("ICO", "*.ico"),
+                       ("WEBP", "*.webp"),
+                       ("All Files", "*.*")))
         self.opened_image = Image.open(self.file_path)
-        self.resized_image = self.opened_image.resize((600, 600), Image.ANTIALIAS)
+        self.resized_image = self.opened_image.resize((1100, 900), Image.ANTIALIAS)
 
         main_canvas.delete("all")
         self.open_image = ImageTk.PhotoImage(self.resized_image)
         main_canvas.create_image(0, 0, anchor=NW, image=self.open_image)
-        output_var.set("you opened an Image")
+        output_var.set("you opened an Image.")
 
     def mail_author(self):
         import webbrowser
@@ -149,7 +176,7 @@ class Project:
         global bg_image
         bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
         main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
-        output_var.set("You are viewing wallpaper")
+        output_var.set("You are viewing wallpaper of software.")
 
 
 def starting_project():

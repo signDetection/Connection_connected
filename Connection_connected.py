@@ -1,10 +1,17 @@
 from tkinter import *
-from tkinter import filedialog
 from tkinter import colorchooser
+from tkinter import filedialog
+
 from PIL import Image, ImageTk
-from GUI.Menubar.Help.Feedback import feedback
+from cv2 import *
+from time import *
+
 from GUI.Menubar.Help.About_Developers import about_dv
+from GUI.Menubar.Help.Feedback import feedback
 from GUI.Menubar.Help.How_To_Use import how_to_use
+from GUI.Menubar.Camera.Camera import MyVideoCapture
+
+camera_running = False
 
 
 class Project:
@@ -93,7 +100,7 @@ class Project:
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=None,
+               command=self.capture,
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
@@ -102,7 +109,7 @@ class Project:
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=None,
+               command=self.camera,
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
@@ -162,9 +169,11 @@ class Project:
         self.opened_image = Image.open(self.file_path)
         self.resized_image = self.opened_image.resize((1100, 900), Image.ANTIALIAS)
 
+        global camera_running
+        camera_running = False
         main_canvas.delete("all")
         self.open_image = ImageTk.PhotoImage(self.resized_image)
-        main_canvas.create_image(0, 0, anchor=NW, image=self.open_image)
+        main_canvas.create_image(150, 0, anchor=NW, image=self.open_image)
         output_var.set("you opened an Image.")
 
     def mail_author(self):
@@ -172,11 +181,46 @@ class Project:
         self.mail = webbrowser.open('mailto:jugalrpatel1704@gmail.com', new=1)
 
     def wallpaper(self):
+        global camera_running
+        camera_running = False
         main_canvas.delete("all")
         global bg_image
         bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
         main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
         output_var.set("You are viewing wallpaper of software.")
+
+    def camera(self):
+        main_canvas.delete("all")
+        global running_video
+        running_video = MyVideoCapture(0)
+        output_var.set("You are using camera")
+        global camera_running
+        camera_running = True
+        self.video_loop()
+
+    def video_loop(self):
+        global camera_running
+        if camera_running is True:
+            ret, frame = running_video.get_frame()
+
+            if ret:
+                self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
+                main_canvas.create_image(380, 210, image=self.photo, anchor=NW)
+
+            main_frame.after(20, self.video_loop)
+        else:
+            running_video.__del__()
+
+    def capture(self):
+        output_var.set("you captured your Photo")
+        output_area.update()
+        ret, frame = running_video.get_frame()
+
+        if ret:
+            cv2.imwrite("ImageGallery/Photo" + strftime("%d-%m-%Y_%H-%M-%S") + ".jpg",
+                        cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+        sleep(0.25)
+        output_var.set("you are using camera")
 
 
 def starting_project():

@@ -79,10 +79,11 @@ class Project:
         self.scrollbar_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         self.scrollbar_canvas.configure(yscrollcommand=self.ver_scrollbar.set)
         self.scrollbar_canvas.configure(xscrollcommand=self.hor_scrollbar.set)
-        self.scrollbar_canvas.bind('<Configure>',
+        self.scrollbar_canvas.bind("<Configure>",
                                    lambda e: self.scrollbar_canvas.configure(
                                        scrollregion=self.scrollbar_canvas.bbox("all")))
-        self.scrollbar_canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+        self.scrollbar_canvas.bind_all("<MouseWheel>", self.vertical_on_mousewheel)
+        self.scrollbar_canvas.bind_all("<Shift-MouseWheel>", self.horizontal_on_mousewheel)
 
         # main frame
 
@@ -188,8 +189,11 @@ class Project:
 
     # menubar and other functions
 
-    def _on_mousewheel(self, event):
-        self.scrollbar_canvas.yview_scroll((int)(-1 * (event.delta / 120)), "units")
+    def vertical_on_mousewheel(self, event):
+        self.scrollbar_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+    def horizontal_on_mousewheel(self, event):
+        self.scrollbar_canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")
 
     def open_file(self):
         self.file_path = filedialog.askopenfilename(
@@ -219,7 +223,8 @@ class Project:
 
     # Button functions
 
-    def wallpaper(self):
+    @staticmethod
+    def wallpaper():
         global camera_running
         camera_running = False
         main_canvas.delete("all")
@@ -250,7 +255,8 @@ class Project:
         else:
             running_video.__del__()
 
-    def capture(self):
+    @staticmethod
+    def capture():
         global camera_running
         if camera_running is True:
             output_var.set("you captured your Photo")

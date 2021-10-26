@@ -75,7 +75,7 @@ class Project:
         second_frame = Frame(main_frame, bg="AliceBlue")
         second_frame.pack(side=TOP, fill=BOTH)
         global main_canvas
-        main_canvas = Canvas(second_frame, bg="AliceBlue", width=1400, height=900)
+        main_canvas = Canvas(second_frame, bg="AliceBlue", width=1400, height=900, highlightthickness=0)
         main_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         global bg_image
         bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
@@ -114,11 +114,11 @@ class Project:
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
         Button(self.button_frame,
-               text=" Face Expression Recognizer ",
+               text=" Facial Expression Recognizer ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=None,
+               command=self.facial_expression_recognizer,
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
@@ -127,7 +127,7 @@ class Project:
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=None,
+               command=self.face_mask_detection,
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
@@ -136,7 +136,7 @@ class Project:
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=None,
+               command=self.sign_language_detection,
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
@@ -212,15 +212,28 @@ class Project:
             running_video.__del__()
 
     def capture(self):
-        output_var.set("you captured your Photo")
-        output_area.update()
-        ret, frame = running_video.get_frame()
+        global camera_running
+        if camera_running is True:
+            output_var.set("you captured your Photo")
+            output_area.update()
+            ret, frame = running_video.get_frame()
 
-        if ret:
-            cv2.imwrite("ImageGallery/Photo" + strftime("%d-%m-%Y_%H-%M-%S") + ".jpg",
-                        cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-        sleep(0.25)
-        output_var.set("you are using camera")
+            if ret:
+                cv2.imwrite("ImageGallery/Photo" + strftime("%d-%m-%Y_%H-%M-%S") + ".jpg",
+                            cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+            sleep(0.25)
+            output_var.set("you are using camera")
+        else:
+            output_var.set("Please turn on Camera before using this button.")
+
+    def face_mask_detection(self):
+        output_var.set("You are on Face Mask Detection. ")
+
+    def sign_language_detection(self):
+        output_var.set("You are on Sign Language Detection. ")
+
+    def facial_expression_recognizer(self):
+        output_var.set("You are on Facial Expression Recognizer")
 
 
 def starting_project():

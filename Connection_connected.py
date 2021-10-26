@@ -17,7 +17,6 @@ camera_running = False
 class Project:
 
     def __init__(self, window):
-        self.window = window
 
         # windowSize,title,icon & background of the window
 
@@ -74,6 +73,7 @@ class Project:
 
         self.ver_scrollbar = Scrollbar(self.scrollbar_frame, orient=VERTICAL, command=self.scrollbar_canvas.yview)
         self.ver_scrollbar.pack(side=RIGHT, fill=Y)
+
         self.hor_scrollbar = Scrollbar(self.scrollbar_frame, orient=HORIZONTAL, command=self.scrollbar_canvas.xview)
         self.hor_scrollbar.pack(side=BOTTOM, fill=X)
         self.scrollbar_canvas.pack(side=LEFT, fill=BOTH, expand=1)
@@ -82,8 +82,27 @@ class Project:
         self.scrollbar_canvas.bind("<Configure>",
                                    lambda e: self.scrollbar_canvas.configure(
                                        scrollregion=self.scrollbar_canvas.bbox("all")))
-        self.scrollbar_canvas.bind_all("<MouseWheel>", self.vertical_on_mousewheel)
-        self.scrollbar_canvas.bind_all("<Shift-MouseWheel>", self.horizontal_on_mousewheel)
+
+        # Mouse and Keyboard Binding to window and scrollbar_canvas
+
+        window.bind_all("<MouseWheel>",
+                        lambda event: self.scrollbar_canvas.yview_scroll(int(-1 * (event.delta / 120)),
+                                                                         "units"))
+        window.bind_all("<Shift-MouseWheel>",
+                        lambda event: self.scrollbar_canvas.xview_scroll(int(-1 * (event.delta / 120)),
+                                                                         "units"))
+        window.bind("<Left>", lambda event: self.scrollbar_canvas.xview_scroll(-1, "units"))
+        window.bind("<Right>", lambda event: self.scrollbar_canvas.xview_scroll(1, "units"))
+        window.bind("<Up>", lambda event: self.scrollbar_canvas.yview_scroll(-1, "units"))
+        window.bind("<Down>", lambda event: self.scrollbar_canvas.yview_scroll(1, "units"))
+
+        window.bind("w", self.wallpaper)
+        window.bind("c", self.camera)
+        window.bind("x", self.capture)
+        window.bind("o", self.open_file)
+        window.bind("s", self.sign_language_detection)
+        window.bind("m", self.face_mask_detection)
+        window.bind("e", self.facial_expression_recognizer)
 
         # main frame
 
@@ -115,8 +134,7 @@ class Project:
                bg="WhiteSmoke",
                command=self.wallpaper,
                borderwidth=5,
-               state=ACTIVE,
-               ).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         Button(self.button_frame,
                text=" capture ",
@@ -125,8 +143,7 @@ class Project:
                bg="WhiteSmoke",
                command=self.capture,
                borderwidth=5,
-               state=ACTIVE,
-               ).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         Button(self.button_frame,
                text=" Camera ",
@@ -135,8 +152,7 @@ class Project:
                bg="WhiteSmoke",
                command=self.camera,
                borderwidth=5,
-               state=ACTIVE,
-               ).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         Button(self.button_frame,
                text=" Facial Expression Recognizer ",
@@ -145,8 +161,7 @@ class Project:
                bg="WhiteSmoke",
                command=self.facial_expression_recognizer,
                borderwidth=5,
-               state=ACTIVE,
-               ).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         Button(self.button_frame,
                text=" Face Mask Detection ",
@@ -155,8 +170,7 @@ class Project:
                bg="WhiteSmoke",
                command=self.face_mask_detection,
                borderwidth=5,
-               state=ACTIVE,
-               ).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         Button(self.button_frame,
                text=" Sign Language Detection ",
@@ -165,8 +179,7 @@ class Project:
                bg="WhiteSmoke",
                command=self.sign_language_detection,
                borderwidth=5,
-               state=ACTIVE,
-               ).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         # output box at bottom of the window
 
@@ -189,20 +202,13 @@ class Project:
 
     # menubar and other functions
 
-    def vertical_on_mousewheel(self, event):
-        self.scrollbar_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
-
-    def horizontal_on_mousewheel(self, event):
-        self.scrollbar_canvas.xview_scroll(int(-1 * (event.delta / 120)), "units")
-
-    def open_file(self):
+    def open_file(self, *args):
         self.file_path = filedialog.askopenfilename(
             title="Open IMG file",
             filetypes=(("All Image Files", "*.png;*.bmp;*.dib;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.ico;*.webp"),
                        ("PNG", "*.png"),
                        ("Bitmap Files", "*.bmp;*.dib"),
                        ("JPEG", "*.jpg;*.jpeg;*.jpe;*.jfif"),
-                       ("GIF", "*.gif"),
                        ("ICO", "*.ico"),
                        ("WEBP", "*.webp"),
                        ("All Files", "*.*")))
@@ -223,8 +229,7 @@ class Project:
 
     # Button functions
 
-    @staticmethod
-    def wallpaper():
+    def wallpaper(self, *args):
         global camera_running
         camera_running = False
         main_canvas.delete("all")
@@ -233,7 +238,7 @@ class Project:
         main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
         output_var.set("You are viewing wallpaper of software.")
 
-    def camera(self):
+    def camera(self, *args):
         main_canvas.delete("all")
         global running_video
         running_video = MyVideoCapture(0)
@@ -255,8 +260,7 @@ class Project:
         else:
             running_video.__del__()
 
-    @staticmethod
-    def capture():
+    def capture(self, *args):
         global camera_running
         if camera_running is True:
             output_var.set("you captured your Photo")
@@ -271,13 +275,13 @@ class Project:
         else:
             output_var.set("Please turn on Camera before using this button.")
 
-    def face_mask_detection(self):
+    def face_mask_detection(self, *args):
         output_var.set("You are on Face Mask Detection. ")
 
-    def sign_language_detection(self):
+    def sign_language_detection(self, *args):
         output_var.set("You are on Sign Language Detection. ")
 
-    def facial_expression_recognizer(self):
+    def facial_expression_recognizer(self, *args):
         output_var.set("You are on Facial Expression Recognizer")
 
 

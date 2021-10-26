@@ -65,11 +65,32 @@ class Project:
 
         # content
 
-        # canvas
+        # dummy frame and canvas for adding scrollbar to window
+
+        self.scrollbar_frame = Frame(window)
+        self.scrollbar_frame.pack(fill=BOTH, expand=1)
+
+        self.scrollbar_canvas = Canvas(self.scrollbar_frame)
+
+        self.ver_scrollbar = Scrollbar(self.scrollbar_frame, orient=VERTICAL, command=self.scrollbar_canvas.yview)
+        self.ver_scrollbar.pack(side=RIGHT, fill=Y)
+        self.hor_scrollbar = Scrollbar(self.scrollbar_frame, orient=HORIZONTAL, command=self.scrollbar_canvas.xview)
+        self.hor_scrollbar.pack(side=BOTTOM, fill=X)
+        self.scrollbar_canvas.pack(side=LEFT, fill=BOTH, expand=1)
+        self.scrollbar_canvas.configure(yscrollcommand=self.ver_scrollbar.set)
+        self.scrollbar_canvas.configure(xscrollcommand=self.hor_scrollbar.set)
+        self.scrollbar_canvas.bind('<Configure>',
+                                   lambda e: self.scrollbar_canvas.configure(
+                                       scrollregion=self.scrollbar_canvas.bbox("all")))
+        self.scrollbar_canvas.bind_all("<MouseWheel>", self._on_mousewheel)
+
+        # main frame
 
         global main_frame
-        main_frame = Frame(window, bg="AliceBlue")
-        main_frame.pack(fill=BOTH, expand=1)
+        main_frame = Frame(self.scrollbar_canvas, bg="AliceBlue")
+        self.scrollbar_canvas.create_window((0, 0), window=main_frame, anchor=NW)
+
+        # second frame for putting main canvas and button frame in it
 
         global second_frame
         second_frame = Frame(main_frame, bg="AliceBlue")
@@ -95,6 +116,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
+
         Button(self.button_frame,
                text=" capture ",
                font=("Times New Roman", 25, "italic"),
@@ -104,6 +126,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
+
         Button(self.button_frame,
                text=" Camera ",
                font=("Times New Roman", 25, "italic"),
@@ -113,6 +136,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
+
         Button(self.button_frame,
                text=" Facial Expression Recognizer ",
                font=("Times New Roman", 25, "italic"),
@@ -122,6 +146,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
+
         Button(self.button_frame,
                text=" Face Mask Detection ",
                font=("Times New Roman", 25, "italic"),
@@ -131,6 +156,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
+
         Button(self.button_frame,
                text=" Sign Language Detection ",
                font=("Times New Roman", 25, "italic"),
@@ -141,9 +167,12 @@ class Project:
                state=ACTIVE,
                ).pack(side=BOTTOM, padx=20, pady=40)
 
+        # output box at bottom of the window
+
         global output_var
         output_var = StringVar()
         output_var.set("Look at Here for Conversation")
+
         global output_area
         output_area = Message(main_frame, textvariable=output_var,
                               relief=SUNKEN,
@@ -154,6 +183,13 @@ class Project:
                               font=("Times New Roman", 35, "bold"),
                               aspect=200)
         output_area.pack(side=BOTTOM, fill=X, padx=10, pady=(10, 40))
+
+    # all needed functions are mention here section by section
+
+    # menubar and other functions
+
+    def _on_mousewheel(self, event):
+        self.scrollbar_canvas.yview_scroll((int)(-1 * (event.delta / 120)), "units")
 
     def open_file(self):
         self.file_path = filedialog.askopenfilename(
@@ -171,6 +207,7 @@ class Project:
 
         global camera_running
         camera_running = False
+
         main_canvas.delete("all")
         self.open_image = ImageTk.PhotoImage(self.resized_image)
         main_canvas.create_image(150, 0, anchor=NW, image=self.open_image)
@@ -179,6 +216,8 @@ class Project:
     def mail_author(self):
         import webbrowser
         self.mail = webbrowser.open('mailto:jugalrpatel1704@gmail.com', new=1)
+
+    # Button functions
 
     def wallpaper(self):
         global camera_running

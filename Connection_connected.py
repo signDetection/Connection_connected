@@ -38,8 +38,7 @@ class Project:
         self.file_menu.add_command(label="Print Result")
         self.file_menu.add_command(label="History")
         self.settings_submenu = Menu(self.file_menu, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
-        self.settings_submenu.add_command(label="change colour",
-                                          command=lambda: main_frame.config(bg=colorchooser.askcolor()[1]))
+        self.settings_submenu.add_command(label="change colour", command=self.color_change)
         self.file_menu.add_cascade(label="settings", menu=self.settings_submenu)
 
         self.file_menu.add_separator()
@@ -69,7 +68,7 @@ class Project:
         self.scrollbar_frame = Frame(window)
         self.scrollbar_frame.pack(fill=BOTH, expand=1)
 
-        self.scrollbar_canvas = Canvas(self.scrollbar_frame)
+        self.scrollbar_canvas = Canvas(self.scrollbar_frame, bg="AliceBlue", highlightthickness=0)
 
         self.ver_scrollbar = Scrollbar(self.scrollbar_frame, orient=VERTICAL, command=self.scrollbar_canvas.yview)
         self.ver_scrollbar.pack(side=RIGHT, fill=Y)
@@ -123,11 +122,11 @@ class Project:
         main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
 
         # Frame for Buttons
+        global button_frame
+        button_frame = Frame(second_frame, bg="AliceBlue")
+        button_frame.pack(side=RIGHT, anchor=N)
 
-        self.button_frame = Frame(second_frame, bg="AliceBlue")
-        self.button_frame.pack(side=RIGHT, anchor=N)
-
-        Button(self.button_frame,
+        Button(button_frame,
                text=" WallPaper ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -136,7 +135,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(self.button_frame,
+        Button(button_frame,
                text=" capture ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -145,7 +144,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(self.button_frame,
+        Button(button_frame,
                text=" Camera ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -154,7 +153,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(self.button_frame,
+        Button(button_frame,
                text=" Facial Expression Recognizer ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -163,7 +162,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(self.button_frame,
+        Button(button_frame,
                text=" Face Mask Detection ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -172,7 +171,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(self.button_frame,
+        Button(button_frame,
                text=" Sign Language Detection ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -201,6 +200,11 @@ class Project:
     # all needed functions are mention here section by section
 
     # menubar and other functions
+
+    def color_change(self):
+        self.bg_color = colorchooser.askcolor()[1]
+        button_frame.config(bg=self.bg_color)
+        main_frame.config(bg=self.bg_color)
 
     def open_file(self, *args):
         self.file_path = filedialog.askopenfilename(

@@ -1,0 +1,7 @@
+python Modules:
+
+tkinter(tk)
+openCV2(cv2)
+pillow(PIL) 
+tensorflow
+

@@ -9,6 +9,7 @@ from time import *
 from GUI.Menubar.Help.About_Developers import about_dv
 from GUI.Menubar.Help.Feedback import feedback
 from GUI.Menubar.Help.How_To_Use import how_to_use
+from GUI.Menubar.Help.Keymap_reference import keymap_reference
 from GUI.Menubar.Camera.Camera import MyVideoCapture
 
 camera_running = False
@@ -53,7 +54,8 @@ class Project:
 
         self.help_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="Help", menu=self.help_menu)
-        self.help_menu.add_command(label="How to use", command=how_to_use)
+        self.help_menu.add_command(label="User Manual", command=how_to_use)
+        self.help_menu.add_command(label="Keymap Reference ", command=keymap_reference)
         self.help_menu.add_separator()
         self.help_menu.add_command(label="check for update")
         self.help_menu.add_separator()
@@ -97,9 +99,9 @@ class Project:
 
         window.bind("w", self.wallpaper)
         window.bind("c", self.camera)
-        window.bind("x", self.capture)
+        window.bind("s", self.capture)
         window.bind("o", self.open_file)
-        window.bind("s", self.sign_language_detection)
+        window.bind("l", self.sign_language_detection)
         window.bind("m", self.face_mask_detection)
         window.bind("e", self.facial_expression_recognizer)
 
@@ -115,7 +117,7 @@ class Project:
         second_frame = Frame(main_frame, bg="AliceBlue")
         second_frame.pack(side=TOP, fill=BOTH)
         global main_canvas
-        main_canvas = Canvas(second_frame, bg="AliceBlue", width=1400, height=900, highlightthickness=0)
+        main_canvas = Canvas(second_frame, bg="white", width=1400, height=900, highlightthickness=0)
         main_canvas.pack(side=LEFT, fill=BOTH, expand=1)
         global bg_image
         bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
@@ -205,6 +207,7 @@ class Project:
         self.bg_color = colorchooser.askcolor()[1]
         button_frame.config(bg=self.bg_color)
         main_frame.config(bg=self.bg_color)
+        self.scrollbar_canvas.config(bg=self.bg_color)
 
     def open_file(self, *args):
         self.file_path = filedialog.askopenfilename(

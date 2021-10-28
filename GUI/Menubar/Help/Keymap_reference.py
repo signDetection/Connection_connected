@@ -84,7 +84,7 @@ class Keymap_reference:
               font=('Times New Roman', 11)).grid(row=12, column=0, padx=(25, 0), sticky=W)
 
         Label(self.main_canvas,
-              text='O ---> Open file ',
+              text='Control + O ---> Open file ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=13, column=0, padx=(25, 0), sticky=W)

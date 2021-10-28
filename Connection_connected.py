@@ -104,14 +104,14 @@ class Project:
         window.bind("w", self.wallpaper)
         window.bind("c", self.camera)
         window.bind("s", self.capture)
-        window.bind("o", self.open_file)
         window.bind("l", self.sign_language_detection)
         window.bind("m", self.face_mask_detection)
         window.bind("e", self.facial_expression_recognizer)
         window.bind("<space>", self.play_music)
-        window.bind("<Control-k>",keymap_reference)
-        window.bind("<Control-c>",self.color_change)
-        window.bind("<Control-u>",how_to_use)
+        window.bind("<Control-o>", self.open_file)
+        window.bind("<Control-k>", keymap_reference)
+        window.bind("<Control-c>", self.color_change)
+        window.bind("<Control-u>", how_to_use)
 
         # Main frame
 
@@ -230,7 +230,7 @@ class Project:
 
     # Menubar and other functions
 
-    def color_change(self,*args):
+    def color_change(self, *args):
         self.bg_color = colorchooser.askcolor()[1]
         self.button_frame.config(bg=self.bg_color)
         self.main_frame.config(bg=self.bg_color)
@@ -277,7 +277,7 @@ class Project:
             if paused is False:
                 mixer.music.load("GUI/sound/background_music.mp3")
                 mixer.music.play(loops=1)
-                mixer.music.set_volume(0.1)
+                mixer.music.set_volume(0.2)
                 play = True
                 self.sound_off_image = PhotoImage(file="GUI/sound/mute.png")
                 self.sound_button.config(image=self.sound_off_image)
@@ -302,13 +302,16 @@ class Project:
         output_var.set("You are viewing wallpaper of software.")
 
     def camera(self, *args):
-        main_canvas.delete("all")
-        global running_video
-        running_video = MyVideoCapture(0)
-        output_var.set("You are using camera")
         global camera_running
-        camera_running = True
-        self.video_loop()
+        if camera_running is True:
+            pass
+        else:
+            main_canvas.delete("all")
+            global running_video
+            running_video = MyVideoCapture(0)
+            output_var.set("You are using camera")
+            camera_running = True
+            self.video_loop()
 
     def video_loop(self):
         global camera_running

@@ -105,7 +105,7 @@ class How_to_use:
                command=how_to_use_window.destroy).pack(side=RIGHT, padx=15, pady=15)
 
 
-def how_to_use():
+def how_to_use(*args):
     global how_to_use_option_window
     how_to_use_option_window = Tk()
     how_to_use_option_window.geometry("550x590")

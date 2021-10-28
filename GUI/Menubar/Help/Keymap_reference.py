@@ -90,16 +90,28 @@ class Keymap_reference:
               font=('Times New Roman', 11)).grid(row=13, column=0, padx=(25, 0), sticky=W)
 
         Label(self.main_canvas,
-              text='P ---> Pause music ',
+              text='Control + U ---> user manual ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=14, column=0, padx=(25, 0), sticky=W)
 
         Label(self.main_canvas,
-              text='SpaceBar ---> play music ',
+              text='Control + K ---> keyboard references ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=15, column=0, padx=(25, 0), sticky=W)
+
+        Label(self.main_canvas,
+              text='Control + C ---> Theme color change ',
+              fg="DarkSlateGray",
+              bg="white",
+              font=('Times New Roman', 11)).grid(row=16, column=0, padx=(25, 0), sticky=W)
+
+        Label(self.main_canvas,
+              text='SpaceBar ---> play/pause music ',
+              fg="DarkSlateGray",
+              bg="white",
+              font=('Times New Roman', 11)).grid(row=17, column=0, padx=(25, 0), sticky=W)
 
 
         # Close button
@@ -112,10 +124,10 @@ class Keymap_reference:
                command=keymap_reference_window.destroy).pack(side=RIGHT, padx=15, pady=15)
 
 
-def keymap_reference():
+def keymap_reference(*args):
     global keymap_reference_option_window
     keymap_reference_option_window = Tk()
-    keymap_reference_option_window.geometry("470x470")
+    keymap_reference_option_window.geometry("470x520")
     Keymap_reference(keymap_reference_option_window)
     keymap_reference_option_window.mainloop()
 

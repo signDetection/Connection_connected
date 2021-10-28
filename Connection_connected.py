@@ -14,6 +14,8 @@ from GUI.Menubar.Help.Keymap_reference import keymap_reference
 from GUI.Menubar.Camera.Camera import MyVideoCapture
 
 camera_running = False
+paused = False
+play = False
 mixer.init()
 
 
@@ -107,7 +109,9 @@ class Project:
         window.bind("m", self.face_mask_detection)
         window.bind("e", self.facial_expression_recognizer)
         window.bind("<space>", self.play_music)
-        window.bind("p", self.mute_music)
+        window.bind("<Control-k>",keymap_reference)
+        window.bind("<Control-c>",self.color_change)
+        window.bind("<Control-u>",how_to_use)
 
         # Main frame
 
@@ -144,24 +148,15 @@ class Project:
                state=ACTIVE).pack(side=LEFT, padx=20, pady=40)
 
         self.sound_on_image = PhotoImage(file="GUI/sound/play.png")
-        Button(self.audio_frame,
-               image=self.sound_on_image,
-               font=("Times New Roman", 25, "italic"),
-               fg="DarkSlateGray",
-               bg="WhiteSmoke",
-               command=self.play_music,
-               borderwidth=5,
-               state=ACTIVE).pack(side=RIGHT, padx=20, pady=40)
-
-        self.mute_image = PhotoImage(file="GUI/sound/mute.png")
-        Button(self.audio_frame,
-               image=self.mute_image,
-               font=("Times New Roman", 25, "italic"),
-               fg="DarkSlateGray",
-               bg="WhiteSmoke",
-               command=self.mute_music,
-               borderwidth=5,
-               state=ACTIVE).pack(side=RIGHT, padx=20, pady=40)
+        self.sound_button = Button(self.audio_frame,
+                                   image=self.sound_on_image,
+                                   font=("Times New Roman", 25, "italic"),
+                                   fg="DarkSlateGray",
+                                   bg="WhiteSmoke",
+                                   command=self.play_music,
+                                   borderwidth=5,
+                                   state=ACTIVE)
+        self.sound_button.pack(side=RIGHT, padx=20, pady=40)
 
         # Camera and capture button and it's frame
 
@@ -235,7 +230,7 @@ class Project:
 
     # Menubar and other functions
 
-    def color_change(self):
+    def color_change(self,*args):
         self.bg_color = colorchooser.askcolor()[1]
         self.button_frame.config(bg=self.bg_color)
         self.main_frame.config(bg=self.bg_color)
@@ -276,12 +271,27 @@ class Project:
     # Entertainment functions
 
     def play_music(self, *args):
-        mixer.music.load("GUI/sound/background_music.mp3")
-        mixer.music.play(loops=0)
-        mixer.music.set_volume(0.1)
+        global play
+        if play is False:
+            global paused
+            if paused is False:
+                mixer.music.load("GUI/sound/background_music.mp3")
+                mixer.music.play(loops=1)
+                mixer.music.set_volume(0.1)
+                play = True
+                self.sound_off_image = PhotoImage(file="GUI/sound/mute.png")
+                self.sound_button.config(image=self.sound_off_image)
 
-    def mute_music(self, *args):
-        mixer.music.stop()
+            else:
+                mixer.music.unpause()
+                play = True
+                self.sound_button.config(image=self.sound_off_image)
+
+        else:
+            mixer.music.pause()
+            self.sound_button.config(image=self.sound_on_image)
+            paused = True
+            play = False
 
     def wallpaper(self, *args):
         global camera_running

@@ -89,6 +89,19 @@ class Keymap_reference:
               bg="white",
               font=('Times New Roman', 11)).grid(row=13, column=0, padx=(25, 0), sticky=W)
 
+        Label(self.main_canvas,
+              text='P ---> Pause music ',
+              fg="DarkSlateGray",
+              bg="white",
+              font=('Times New Roman', 11)).grid(row=14, column=0, padx=(25, 0), sticky=W)
+
+        Label(self.main_canvas,
+              text='SpaceBar ---> play music ',
+              fg="DarkSlateGray",
+              bg="white",
+              font=('Times New Roman', 11)).grid(row=15, column=0, padx=(25, 0), sticky=W)
+
+
         # Close button
         Button(keymap_reference_window,
                text='Close',
@@ -102,7 +115,7 @@ class Keymap_reference:
 def keymap_reference():
     global keymap_reference_option_window
     keymap_reference_option_window = Tk()
-    keymap_reference_option_window.geometry("400x420")
+    keymap_reference_option_window.geometry("470x470")
     Keymap_reference(keymap_reference_option_window)
     keymap_reference_option_window.mainloop()
 

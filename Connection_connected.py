@@ -5,6 +5,7 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 from cv2 import *
 from time import *
+from pygame import mixer
 
 from GUI.Menubar.Help.About_Developers import about_dv
 from GUI.Menubar.Help.Feedback import feedback
@@ -13,13 +14,14 @@ from GUI.Menubar.Help.Keymap_reference import keymap_reference
 from GUI.Menubar.Camera.Camera import MyVideoCapture
 
 camera_running = False
+mixer.init()
 
 
 class Project:
 
     def __init__(self, window):
 
-        # windowSize,title,icon & background of the window
+        # WindowSize,title,icon & background of the window
 
         window.geometry("1500x730")
         window.title("Conversation Connected")
@@ -28,7 +30,7 @@ class Project:
         window.config(background="AliceBlue")
         window.state('zoomed')
 
-        # Top menu of the window
+        #  Menubar of the window
 
         self.menubar = Menu(window)
         window.config(menu=self.menubar)
@@ -63,9 +65,9 @@ class Project:
         self.help_menu.add_command(label="Contact Support...", command=self.mail_author)
         self.help_menu.add_command(label="Submit Feedback...", command=feedback)
 
-        # content
+        # Main Content
 
-        # dummy frame and canvas for adding scrollbar to window
+        # Dummy frame and canvas for adding scrollbar to window
 
         self.scrollbar_frame = Frame(window)
         self.scrollbar_frame.pack(fill=BOTH, expand=1)
@@ -87,11 +89,11 @@ class Project:
         # Mouse and Keyboard Binding to window and scrollbar_canvas
 
         window.bind_all("<MouseWheel>",
-                        lambda event: self.scrollbar_canvas.yview_scroll(int(-1 * (event.delta / 120)),
-                                                                         "units"))
+                        lambda e: self.scrollbar_canvas.yview_scroll(int(-1 * (e.delta / 120)),
+                                                                     "units"))
         window.bind_all("<Shift-MouseWheel>",
-                        lambda event: self.scrollbar_canvas.xview_scroll(int(-1 * (event.delta / 120)),
-                                                                         "units"))
+                        lambda e: self.scrollbar_canvas.xview_scroll(int(-1 * (e.delta / 120)),
+                                                                     "units"))
         window.bind("<Left>", lambda event: self.scrollbar_canvas.xview_scroll(-1, "units"))
         window.bind("<Right>", lambda event: self.scrollbar_canvas.xview_scroll(1, "units"))
         window.bind("<Up>", lambda event: self.scrollbar_canvas.yview_scroll(-1, "units"))
@@ -104,58 +106,88 @@ class Project:
         window.bind("l", self.sign_language_detection)
         window.bind("m", self.face_mask_detection)
         window.bind("e", self.facial_expression_recognizer)
+        window.bind("<space>", self.play_music)
+        window.bind("p", self.mute_music)
 
-        # main frame
+        # Main frame
 
-        global main_frame
-        main_frame = Frame(self.scrollbar_canvas, bg="AliceBlue")
-        self.scrollbar_canvas.create_window((0, 0), window=main_frame, anchor=NW)
+        self.main_frame = Frame(self.scrollbar_canvas, bg="AliceBlue")
+        self.scrollbar_canvas.create_window((0, 0), window=self.main_frame, anchor=NW)
 
-        # second frame for putting main canvas and button frame in it
+        # Second frame for putting main canvas and button frame in it
 
-        global second_frame
-        second_frame = Frame(main_frame, bg="AliceBlue")
-        second_frame.pack(side=TOP, fill=BOTH)
+        self.second_frame = Frame(self.main_frame, bg="AliceBlue")
+        self.second_frame.pack(side=TOP, fill=BOTH)
         global main_canvas
-        main_canvas = Canvas(second_frame, bg="white", width=1400, height=900, highlightthickness=0)
+        main_canvas = Canvas(self.second_frame, bg="white", width=1400, height=900, highlightthickness=0)
         main_canvas.pack(side=LEFT, fill=BOTH, expand=1)
-        global bg_image
-        bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
-        main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
+        self.bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
+        main_canvas.create_image(100, 100, anchor=NW, image=self.bg_image)
 
         # Frame for Buttons
-        global button_frame
-        button_frame = Frame(second_frame, bg="AliceBlue")
-        button_frame.pack(side=RIGHT, anchor=N)
 
-        Button(button_frame,
+        self.button_frame = Frame(self.second_frame, bg="AliceBlue")
+        self.button_frame.pack(side=RIGHT, anchor=N)
+
+        # Wallpaper and audio buttons and it's frame
+
+        self.audio_frame = Frame(self.button_frame, bg="AliceBlue")
+        self.audio_frame.pack(side=BOTTOM)
+
+        Button(self.audio_frame,
                text=" WallPaper ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
                command=self.wallpaper,
                borderwidth=5,
-               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=LEFT, padx=20, pady=40)
 
-        Button(button_frame,
-               text=" capture ",
+        self.sound_on_image = PhotoImage(file="GUI/sound/play.png")
+        Button(self.audio_frame,
+               image=self.sound_on_image,
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=self.capture,
+               command=self.play_music,
                borderwidth=5,
-               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=RIGHT, padx=20, pady=40)
 
-        Button(button_frame,
+        self.mute_image = PhotoImage(file="GUI/sound/mute.png")
+        Button(self.audio_frame,
+               image=self.mute_image,
+               font=("Times New Roman", 25, "italic"),
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
+               command=self.mute_music,
+               borderwidth=5,
+               state=ACTIVE).pack(side=RIGHT, padx=20, pady=40)
+
+        # Camera and capture button and it's frame
+
+        self.camera_frame = Frame(self.button_frame, bg="AliceBlue")
+        self.camera_frame.pack(side=BOTTOM)
+        Button(self.camera_frame,
                text=" Camera ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
                command=self.camera,
                borderwidth=5,
-               state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
+               state=ACTIVE).pack(side=LEFT, padx=20, pady=40)
 
-        Button(button_frame,
+        Button(self.camera_frame,
+               text=" Capture ",
+               font=("Times New Roman", 25, "italic"),
+               fg="DarkSlateGray",
+               bg="WhiteSmoke",
+               command=self.capture,
+               borderwidth=5,
+               state=ACTIVE).pack(side=RIGHT, padx=20, pady=40)
+
+        # Main feature functions
+
+        Button(self.button_frame,
                text=" Facial Expression Recognizer ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -164,7 +196,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(button_frame,
+        Button(self.button_frame,
                text=" Face Mask Detection ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -173,7 +205,7 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        Button(button_frame,
+        Button(self.button_frame,
                text=" Sign Language Detection ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
@@ -182,14 +214,14 @@ class Project:
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
-        # output box at bottom of the window
+        # Output box at bottom of the window
 
         global output_var
         output_var = StringVar()
         output_var.set("Look at Here for Conversation")
 
         global output_area
-        output_area = Message(main_frame, textvariable=output_var,
+        output_area = Message(self.main_frame, textvariable=output_var,
                               relief=SUNKEN,
                               anchor="nw",
                               fg="DarkSlateGray",
@@ -199,15 +231,18 @@ class Project:
                               aspect=200)
         output_area.pack(side=BOTTOM, fill=X, padx=10, pady=(10, 40))
 
-    # all needed functions are mention here section by section
+    # All needed functions are mention here section by section
 
-    # menubar and other functions
+    # Menubar and other functions
 
     def color_change(self):
         self.bg_color = colorchooser.askcolor()[1]
-        button_frame.config(bg=self.bg_color)
-        main_frame.config(bg=self.bg_color)
+        self.button_frame.config(bg=self.bg_color)
+        self.main_frame.config(bg=self.bg_color)
         self.scrollbar_canvas.config(bg=self.bg_color)
+        self.camera_frame.config(bg=self.bg_color)
+        self.audio_frame.config(bg=self.bg_color)
+        self.second_frame.config(bg=self.bg_color)
 
     def open_file(self, *args):
         self.file_path = filedialog.askopenfilename(
@@ -219,16 +254,18 @@ class Project:
                        ("ICO", "*.ico"),
                        ("WEBP", "*.webp"),
                        ("All Files", "*.*")))
-        self.opened_image = Image.open(self.file_path)
-        self.resized_image = self.opened_image.resize((1100, 900), Image.ANTIALIAS)
 
-        global camera_running
-        camera_running = False
+        if self.file_path:
+            self.opened_image = Image.open(self.file_path)
+            self.resized_image = self.opened_image.resize((1100, 900), Image.ANTIALIAS)
 
-        main_canvas.delete("all")
-        self.open_image = ImageTk.PhotoImage(self.resized_image)
-        main_canvas.create_image(150, 0, anchor=NW, image=self.open_image)
-        output_var.set("you opened an Image.")
+            global camera_running
+            camera_running = False
+
+            main_canvas.delete("all")
+            self.open_image = ImageTk.PhotoImage(self.resized_image)
+            main_canvas.create_image(150, 0, anchor=NW, image=self.open_image)
+            output_var.set("you opened an Image.")
 
     def mail_author(self):
         import webbrowser
@@ -236,13 +273,22 @@ class Project:
 
     # Button functions
 
+    # Entertainment functions
+
+    def play_music(self, *args):
+        mixer.music.load("GUI/sound/background_music.mp3")
+        mixer.music.play(loops=0)
+        mixer.music.set_volume(0.1)
+
+    def mute_music(self, *args):
+        mixer.music.stop()
+
     def wallpaper(self, *args):
         global camera_running
         camera_running = False
         main_canvas.delete("all")
-        global bg_image
-        bg_image = PhotoImage(file="GUI/image/LogoOfProject.png")
-        main_canvas.create_image(100, 100, anchor=NW, image=bg_image)
+        self.wallpaper_image = PhotoImage(file="GUI/image/LogoOfProject.png")
+        main_canvas.create_image(100, 100, anchor=NW, image=self.wallpaper_image)
         output_var.set("You are viewing wallpaper of software.")
 
     def camera(self, *args):
@@ -263,7 +309,7 @@ class Project:
                 self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
                 main_canvas.create_image(380, 210, image=self.photo, anchor=NW)
 
-            main_frame.after(20, self.video_loop)
+            self.main_frame.after(20, self.video_loop)
         else:
             running_video.__del__()
 
@@ -282,6 +328,8 @@ class Project:
         else:
             output_var.set("Please turn on Camera before using this button.")
 
+    # Main functions
+
     def face_mask_detection(self, *args):
         output_var.set("You are on Face Mask Detection. ")
 
@@ -293,10 +341,10 @@ class Project:
 
 
 def starting_project():
-    global main_window
-    main_window = Tk()
-    Project(main_window)
-    main_window.mainloop()
+    global project_window
+    project_window = Tk()
+    Project(project_window)
+    project_window.mainloop()
 
 
 starting_project()

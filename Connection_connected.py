@@ -2,8 +2,8 @@ from tkinter import *
 from tkinter import colorchooser
 from tkinter import filedialog
 
+import cv2
 from PIL import Image, ImageTk
-from cv2 import *
 from time import *
 from pygame import mixer
 
@@ -276,7 +276,7 @@ class Project:
             global paused
             if paused is False:
                 mixer.music.load("GUI/sound/background_music.mp3")
-                mixer.music.play(loops=1)
+                mixer.music.play(loops=-1)
                 mixer.music.set_volume(0.2)
                 play = True
                 self.sound_off_image = PhotoImage(file="GUI/sound/mute.png")

@@ -55,10 +55,10 @@ class Project:
 
         self.edit_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="Tools", menu=self.edit_menu)
-        self.edit_menu.add_command(label="Sign Language Detection")
+        self.edit_menu.add_command(label="Sign Language Detection", command=self.sign_language_detection)
         self.edit_menu.add_separator()
-        self.edit_menu.add_command(label="Facial Expression Recognizer")
-        self.edit_menu.add_command(label="Face Mask Detection")
+        self.edit_menu.add_command(label="Hand Gesture Recognizer", command=self.hand_moment_tracker)
+        self.edit_menu.add_command(label="Face Mask Detection", command=self.face_mask_detection)
 
         self.help_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="Help", menu=self.help_menu)
@@ -245,7 +245,7 @@ class Project:
 
     def open_file(self, *args):
         self.file_path = filedialog.askopenfilename(
-            initialdir = "./ImageGallery",
+            initialdir="./ImageGallery",
             title="Open IMG file",
             filetypes=(("All Image Files", "*.png;*.bmp;*.dib;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.ico;*.webp"),
                        ("PNG", "*.png"),

@@ -54,7 +54,7 @@ class Keymap_reference:
               font=('Times New Roman', 11)).grid(row=7, column=0, padx=(25, 0), sticky=W)
 
         Label(self.main_canvas,
-              text='E ---> Facial Emotion Recognizer ',
+              text='H ---> Hand Gesture Recognizer ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=8, column=0, padx=(25, 0), sticky=W)

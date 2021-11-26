@@ -50,25 +50,25 @@ class How_to_use:
               font=('Times New Roman', 11)).grid(row=8, column=0, padx=5)
         # sub header 2
         Label(self.main_canvas,
-              text='Facial Expression Recognizer :',
+              text='Hand Gesture Recognizer :',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 15, 'bold')).grid(row=15, column=0, padx=5,
                                                          pady=(35, 10))
         Label(self.main_canvas,
-              text='Click on the Facial Expression Recognizer button. ',
+              text='Click on the Hand Gesture Recognizer button. ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=16, column=0, padx=5)
 
         Label(self.main_canvas,
-              text='Now look at the camera. ',
+              text='do some action in front of the camera. ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=17, column=0, padx=5)
 
         Label(self.main_canvas,
-              text='Your current mood was displayed on the bottom of the screen. ',
+              text='Your current gesture was displayed on the bottom of the screen. ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=18, column=0, padx=5)

@@ -2,6 +2,7 @@ python Modules:
 
 tkinter(tk)
 openCV2(cv2)
-pillow(PIL) 
-tensorflow
+pillow(PIL)
+tensorflow 2.5
 pygame
+mideapipe

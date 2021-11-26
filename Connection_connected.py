@@ -1,20 +1,23 @@
+from time import *
 from tkinter import *
 from tkinter import colorchooser
 from tkinter import filedialog
 
 import cv2
 from PIL import Image, ImageTk
-from time import *
 from pygame import mixer
 
+from FaceMaskDetection.faceMaskDetection import main_face_mask_detector
+from GUI.Menubar.Camera.Camera import MyVideoCapture
 from GUI.Menubar.Help.About_Developers import about_dv
 from GUI.Menubar.Help.Feedback import feedback
 from GUI.Menubar.Help.How_To_Use import how_to_use
 from GUI.Menubar.Help.Keymap_reference import keymap_reference
-from GUI.Menubar.Camera.Camera import MyVideoCapture
-from FaceMaskDetection.faceMaskDetection import main_face_mask_detector
+from GUI.Menubar.hand_tracker.Handtracker import hand_moment_detector
 
 camera_running = False
+hand_tracker = False
+mask_detector = False
 paused = False
 play = False
 mixer.init()
@@ -107,7 +110,7 @@ class Project:
         window.bind("s", self.capture)
         window.bind("l", self.sign_language_detection)
         window.bind("m", self.face_mask_detection)
-        window.bind("e", self.facial_expression_recognizer)
+        window.bind("h", self.hand_moment_tracker)
         window.bind("<space>", self.play_music)
         window.bind("<Control-o>", self.open_file)
         window.bind("<Control-k>", keymap_reference)
@@ -184,11 +187,11 @@ class Project:
         # Main feature functions
 
         Button(self.button_frame,
-               text=" Facial Expression Recognizer ",
+               text=" Hand gesture recognizer ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=self.facial_expression_recognizer,
+               command=self.hand_moment_tracker,
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
@@ -242,6 +245,7 @@ class Project:
 
     def open_file(self, *args):
         self.file_path = filedialog.askopenfilename(
+            initialdir = "./ImageGallery",
             title="Open IMG file",
             filetypes=(("All Image Files", "*.png;*.bmp;*.dib;*.jpg;*.jpeg;*.jpe;*.jfif;*.gif;*.ico;*.webp"),
                        ("PNG", "*.png"),
@@ -303,6 +307,8 @@ class Project:
         output_var.set("You are viewing wallpaper of software.")
 
     def camera(self, *args):
+        global hand_tracker
+        hand_tracker = False
         global camera_running
         if camera_running is True:
             pass
@@ -314,9 +320,29 @@ class Project:
             camera_running = True
             self.video_loop()
 
-    def video_loop(self):
+    def hand_moment_tracker(self, *args):
         global camera_running
-        if camera_running is True:
+        camera_running = False
+        main_canvas.delete("all")
+        output_var.set("You are on Hand Moment Tracker. ")
+        hand_moment_detector()
+
+        # global camera_running
+        # camera_running = False
+        # global hand_tracker
+        # if hand_tracker is True:
+        #     pass
+        # else:
+        #     main_canvas.delete("all")
+        #     global running_video
+        #     running_video = HandDetection(0)
+        #     output_var.set("You are using camera")
+        #     hand_tracker = True
+        #     self.video_loop()
+
+    def video_loop(self):
+        global camera_running, hand_tracker
+        if camera_running or hand_tracker is True:
             ret, frame = running_video.get_frame()
 
             if ret:
@@ -346,14 +372,15 @@ class Project:
 
     def face_mask_detection(self, *args):
         output_var.set("You are on Face Mask Detection. ")
-        main_face_mask_detector()
-
+        global mask_detector
+        if mask_detector is False:
+            main_face_mask_detector()
+            mask_detector = True
+        else:
+            pass
 
     def sign_language_detection(self, *args):
         output_var.set("You are on Sign Language Detection. ")
-
-    def facial_expression_recognizer(self, *args):
-        output_var.set("You are on Facial Expression Recognizer")
 
 
 def starting_project():

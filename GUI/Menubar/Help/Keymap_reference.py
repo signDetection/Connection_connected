@@ -48,7 +48,7 @@ class Keymap_reference:
               font=('Times New Roman', 11)).grid(row=4, column=0, padx=(25, 0), sticky=W)
 
         Label(self.main_canvas,
-              text='L ---> Sign Language Detection  ',
+              text='F ---> Facial Expression Detection  ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=7, column=0, padx=(25, 0), sticky=W)

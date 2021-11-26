@@ -55,7 +55,7 @@ class Project:
 
         self.edit_menu = Menu(self.menubar, tearoff=0, fg="DarkSlateGray", bg="WhiteSmoke")
         self.menubar.add_cascade(label="Tools", menu=self.edit_menu)
-        self.edit_menu.add_command(label="Sign Language Detection", command=self.sign_language_detection)
+        self.edit_menu.add_command(label="Facial Expression Detection", command=self.facial_expression_detection)
         self.edit_menu.add_separator()
         self.edit_menu.add_command(label="Hand Gesture Recognizer", command=self.hand_moment_tracker)
         self.edit_menu.add_command(label="Face Mask Detection", command=self.face_mask_detection)
@@ -108,7 +108,7 @@ class Project:
         window.bind("w", self.wallpaper)
         window.bind("c", self.camera)
         window.bind("s", self.capture)
-        window.bind("l", self.sign_language_detection)
+        window.bind("f", self.facial_expression_detection)
         window.bind("m", self.face_mask_detection)
         window.bind("h", self.hand_moment_tracker)
         window.bind("<space>", self.play_music)
@@ -205,11 +205,11 @@ class Project:
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
         Button(self.button_frame,
-               text=" Sign Language Detection ",
+               text=" Facial Expression Detection ",
                font=("Times New Roman", 25, "italic"),
                fg="DarkSlateGray",
                bg="WhiteSmoke",
-               command=self.sign_language_detection,
+               command=self.facial_expression_detection,
                borderwidth=5,
                state=ACTIVE).pack(side=BOTTOM, padx=20, pady=40)
 
@@ -323,8 +323,10 @@ class Project:
     def hand_moment_tracker(self, *args):
         global camera_running
         camera_running = False
-        main_canvas.delete("all")
         output_var.set("You are on Hand Moment Tracker. ")
+        main_canvas.delete("all")
+        main_canvas.update()
+        sleep(0.2)
         hand_moment_detector()
 
         # global camera_running
@@ -372,6 +374,9 @@ class Project:
 
     def face_mask_detection(self, *args):
         output_var.set("You are on Face Mask Detection. ")
+        main_canvas.delete("all")
+        main_canvas.update()
+        sleep(0.2)
         global mask_detector
         if mask_detector is False:
             main_face_mask_detector()
@@ -379,8 +384,12 @@ class Project:
         else:
             pass
 
-    def sign_language_detection(self, *args):
+    def facial_expression_detection(self, *args):
+        main_canvas.delete("all")
+        main_canvas.update()
+        sleep(0.2)
         output_var.set("You are on Sign Language Detection. ")
+
 
 
 def starting_project():

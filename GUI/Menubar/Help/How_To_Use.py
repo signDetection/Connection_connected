@@ -26,28 +26,23 @@ class How_to_use:
 
         # sub header 1
         Label(self.main_canvas,
-              text='Sign Language Detection :',
+              text='Facial Expression Detection :',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 15, 'bold')).grid(row=5, column=0, padx=5, pady=(15, 10))
 
         Label(self.main_canvas,
-              text='Click on the  Sign Language Detection button. ',
+              text='Click on the  Facial Expression Detection button. ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=6, column=0, padx=5)
 
         Label(self.main_canvas,
-              text='Now Do some American Hand Language Action in front of camera. ',
+              text='Now Look at the camera your current mood is showing on the video. ',
               fg="DarkSlateGray",
               bg="white",
               font=('Times New Roman', 11)).grid(row=7, column=0, padx=5)
 
-        Label(self.main_canvas,
-              text='The letter or word displayed at the bottom of the screen. ',
-              fg="DarkSlateGray",
-              bg="white",
-              font=('Times New Roman', 11)).grid(row=8, column=0, padx=5)
         # sub header 2
         Label(self.main_canvas,
               text='Hand Gesture Recognizer :',

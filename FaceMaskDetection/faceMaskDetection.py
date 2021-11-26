@@ -56,7 +56,7 @@ class FaceMaskDetector :
         self.face_mask_detector()
 
     def face_mask_detector(self) :
-        model=load_model("./model2-008.model")
+        model=load_model("/Users/jayparekh/Documents/Miniproject/Connection_connected/FaceMaskDetection/model2-008.model")
 
         results={0:'without mask',1:'mask'}
         GR_dict={0:(0,0,255),1:(0,255,0)}
@@ -65,7 +65,7 @@ class FaceMaskDetector :
         cap = cv2.VideoCapture(0) 
 
 
-        haarcascade = cv2.CascadeClassifier('./haarcascade_frontalface_default.xml')
+        haarcascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
         while True:
             (rval, im) = cap.read()

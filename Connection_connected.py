@@ -12,6 +12,7 @@ from GUI.Menubar.Help.Feedback import feedback
 from GUI.Menubar.Help.How_To_Use import how_to_use
 from GUI.Menubar.Help.Keymap_reference import keymap_reference
 from GUI.Menubar.Camera.Camera import MyVideoCapture
+from FaceMaskDetection.faceMaskDetection import main_face_mask_detector
 
 camera_running = False
 paused = False
@@ -345,6 +346,8 @@ class Project:
 
     def face_mask_detection(self, *args):
         output_var.set("You are on Face Mask Detection. ")
+        main_face_mask_detector()
+
 
     def sign_language_detection(self, *args):
         output_var.set("You are on Sign Language Detection. ")

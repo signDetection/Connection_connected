@@ -5,4 +5,4 @@ openCV2(cv2)
 pillow(PIL)
 tensorflow 2.5
 pygame
-mideapipe
+mediapipe

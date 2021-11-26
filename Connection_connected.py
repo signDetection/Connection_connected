@@ -391,7 +391,6 @@ class Project:
         output_var.set("You are on Sign Language Detection. ")
 
 
-
 def starting_project():
     global project_window
     project_window = Tk()

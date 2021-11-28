@@ -1,15 +1,11 @@
 from tensorflow.keras.models import model_from_json
-import numpy as np
-
-import tensorflow as tf
 
 
 class FacialExpressionModel(object):
-
     EMOTIONS_LIST = ["Angry", "Disgust",
-                    "Fear", "Happy",
-                    "Neutral", "Sad",
-                    "Surprise"]
+                     "Fear", "Happy",
+                     "Neutral", "Sad",
+                     "Surprise"]
 
     def __init__(self, model_json_file, model_weights_file):
         # load model from JSON file
@@ -25,12 +21,14 @@ class FacialExpressionModel(object):
         self.preds = self.loaded_model.predict(img)
         return FacialExpressionModel.EMOTIONS_LIST[np.argmax(self.preds)]
 
+
 import cv2
 import numpy as np
 
 facec = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 model = FacialExpressionModel("./output/model.json", "./output/model_weights.h5")
 font = cv2.FONT_HERSHEY_SIMPLEX
+
 
 class VideoCamera(object):
     def __init__(self):
@@ -46,22 +44,32 @@ class VideoCamera(object):
         faces = facec.detectMultiScale(gray_fr, 1.3, 5)
 
         for (x, y, w, h) in faces:
-            fc = gray_fr[y:y+h, x:x+w]
+            fc = gray_fr[y:y + h, x:x + w]
 
             roi = cv2.resize(fc, (48, 48))
             pred = model.predict_emotion(roi[np.newaxis, :, :, np.newaxis])
 
             cv2.putText(fr, pred, (x, y), font, 1, (255, 255, 0), 2)
-            cv2.rectangle(fr,(x,y),(x+w,y+h),(255,0,0),2)
+            cv2.rectangle(fr, (x, y), (x + w, y + h), (255, 0, 0), 2)
 
         return fr
+
 
 def gen(camera):
     while True:
         frame = camera.get_frame()
-        cv2.imshow('Facial Expression Recognization',frame)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.imshow('Facial Expression Recognization', frame)
+        key = cv2.waitKey(10)
+        if key & 0xFF == ord('q'):
+            break
+        if key == 27:
             break
     cv2.destroyAllWindows()
 
-gen(VideoCamera())
+
+def main_facial_expression_detector():
+    gen(VideoCamera())
+
+
+if __name__ == "__main__":
+    gen(VideoCamera())

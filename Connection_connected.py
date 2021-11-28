@@ -8,6 +8,7 @@ from PIL import Image, ImageTk
 from pygame import mixer
 
 from FaceMaskDetection.faceMaskDetection import main_face_mask_detector
+# from FacialExpressionDetection.expressionDetector import main_facial_expression_detector
 from GUI.Menubar.Camera.Camera import MyVideoCapture
 from GUI.Menubar.Help.About_Developers import about_dv
 from GUI.Menubar.Help.Feedback import feedback
@@ -389,6 +390,7 @@ class Project:
         main_canvas.update()
         sleep(0.2)
         output_var.set("You are on Sign Language Detection. ")
+        # main_facial_expression_detector()
 
 
 def starting_project():
